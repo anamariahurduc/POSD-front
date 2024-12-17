@@ -1,5 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized} from 'vue-router'
 import HomeView from '../views/HomePage.vue'
+import requireAuth from "@/router/middleware/requireAuth";
+import middlewarePipeline from "@/router/middlewarePipeline";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,10 +34,40 @@ const router = createRouter({
     {
       path:'/dashboard',
       name:'dashboard',
-      component: () => import('../views/dashboard/ViewPatients.vue')
+      component: () => import('../views/dashboard/ViewPatients.vue'),
+      meta: {
+        permission: 'view_medical_record',
+        middleware: [requireAuth]
+      },
     },
 
   ]
 })
+
+router.beforeEach(
+    (
+        to: RouteLocationNormalized,
+        from: RouteLocationNormalized,
+        next: NavigationGuardNext
+    ) => {
+
+
+      if (!to.meta.middleware) {
+        return next();
+      }
+      const middleware = to.meta.middleware as any;
+
+      const context = {
+        to,
+        from,
+        next,
+      };
+
+      return middleware[0]({
+        ...context,
+        next: middlewarePipeline(context, middleware, 1),
+      });
+    }
+);
 
 export default router
