@@ -174,7 +174,6 @@
                         </div>
                     </td>
                     <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <!--            <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Jese image">-->
                         <div class="ps-3">
                             <div class="text-base font-semibold">Leslie Livingston</div>
                             <div class="font-normal text-gray-500">leslie@flowbite.com</div>
@@ -202,4 +201,33 @@
 <script setup>
 
 import Navbar from "@/components/Navbar.vue";
+import axios from "axios";
+import {onMounted, ref} from "vue";
+
+const users = ref([]);
+const roles = ref([]);
+
+const getUsers = (async () => {
+    await axios.get('http://api.infomed.develop.eiddew.com/api/users').then((response) => {
+      response.data.forEach((user) => {
+        users.value.push(user);
+      })
+    }).catch((error) => {
+    })
+})
+
+const getRoles = async() => {
+  await axios.get('http://api.infomed.develop.eiddew.com/api/getRoles').then((response) => {
+    response.data.forEach((role) => {
+      roles.value.push(role);
+    })
+  }).catch((error) => {
+
+  })
+}
+
+onMounted(() => {
+  getUsers();
+  getRoles();
+})
 </script>

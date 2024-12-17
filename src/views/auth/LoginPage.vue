@@ -18,8 +18,6 @@
               <input
                   class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="password" placeholder="Password" v-model="password"/>
-              <a href="#" class="font-medium text-sm text-[#ba29b3] hover:text-[#8d2188]">Forgot password?</a>
-
               <button @click="login()"
                       class="mt-5 tracking-wide font-semibold bg-[#ba29b3] text-gray-100 w-full py-4 rounded-lg hover:bg-[#8d2188] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                 <svg class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
@@ -58,27 +56,32 @@ import {useRouter} from "vue-router";
 import {ref} from 'vue';
 import axios from "axios";
 import Swal from "sweetalert2";
+import {useCookies} from "vue3-cookies";
 import Navbar from "@/components/Navbar.vue";
 
 const router = useRouter();
 const username = ref('');
 const password = ref('');
-
+const { cookies } = useCookies();
 const login = async() => {
-    await axios.post('https://anamaria.hurduc.master.develop.eiddew.com/api/login', {
+    await axios.post('http://api.infomed.develop.eiddew.com/api/login', {
         email: username.value,
         password: password.value
     }).then((response) => {
-        console.log(response);
-        Swal.fire({
-            title: "Success",
-            text: response.data.message,
-            icon: "success"
-        });
+      console.log(response);
+      Swal.fire({
+          title: "Success",
+          text: response.data.message,
+          icon: "success"
+      });
 
-        router.push('dashboard');
+      cookies.set("token", response.data.token, '', '/', `${import.meta.env.VITE_DOMAIN_COOKIE}`);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+      getUser();
+
+      router.push('dashboard');
     }).catch((error) => {
-        console.log(error);
         Swal.fire({
             title: "Error",
             text: error.response.data.message,
@@ -86,6 +89,15 @@ const login = async() => {
         })
     })
 }
+
+const getUser = async () => {
+  try {
+    const response = await axios.get('http://api.infomed.develop.eiddew.com/api/user');
+    console.log('User data:', response.data);
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+  }
+};
 
 const register = () => {
   router.push('register');
