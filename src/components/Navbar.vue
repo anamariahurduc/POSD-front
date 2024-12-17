@@ -22,12 +22,31 @@
                         <a href="#" class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
+                        <a href="#" @click="logout()" class="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Logout</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </template>
+
 <script setup>
+
+import axios from "axios";
+import Swal from "sweetalert2";
+import {useCookies} from "vue3-cookies";
+import {useRouter} from "vue-router";
+
+const { cookies } = useCookies();
+const router = useRouter();
+
+const logout = async () => {
+    await axios.post('http://api.infomed.develop.eiddew.com/api/logout').then((response) => {
+      console.log(response);
+      cookies.remove("token");
+      router.push('/login');
+    }).catch((error) => {
+
+    });
+};
 </script>
