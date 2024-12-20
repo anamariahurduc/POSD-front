@@ -107,11 +107,59 @@ import {useCookies} from "vue3-cookies";
 const users = ref([]);
 const { cookies } = useCookies();
 
+function hexStringToUint8Array(hexString) {
+  const bytes = new Uint8Array(hexString.length / 2);
+  for (let i = 0; i < hexString.length; i += 2) {
+    bytes[i / 2] = parseInt(hexString.substr(i, 2), 16);
+  }
+  return bytes;
+}
+
+function base64ToUint8Array(base64String) {
+  const binaryString = atob(base64String);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+async function decryptAES(encryptedData, key, iv) {
+  const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      key,
+      { name: 'AES-CBC' },
+      false,
+      ['decrypt']
+  );
+
+  const decrypted = await crypto.subtle.decrypt(
+      {
+        name: 'AES-CBC',
+        iv: iv
+      },
+      cryptoKey,
+      encryptedData
+  );
+
+  return new TextDecoder().decode(decrypted);
+}
+
 const getUsers = (async () => {
-    await axios.get('http://api.infomed.develop.eiddew.com/api/users').then((response) => {
-      response.data.forEach((user) => {
+    await axios.get('http://api.infomed.develop.eiddew.com/api/users').then(async (response) => {
+      const keyArray = hexStringToUint8Array(response.data.key);
+      const ivArray = hexStringToUint8Array(response.data.iv);
+
+      const encryptedArray = base64ToUint8Array(response.data.encrypted_data);
+      const decryptedText = await decryptAES(encryptedArray, keyArray, ivArray);
+
+      const decryptedData = JSON.parse(decryptedText);
+
+      decryptedData.forEach((user) => {
         users.value.push(user);
       })
+
     }).catch((error) => {
     })
 })
