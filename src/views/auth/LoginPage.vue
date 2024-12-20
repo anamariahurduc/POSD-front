@@ -68,7 +68,6 @@ const login = async() => {
         email: username.value,
         password: password.value
     }).then((response) => {
-      console.log(response);
       Swal.fire({
           title: "Success",
           text: response.data.message,
@@ -93,7 +92,6 @@ const login = async() => {
 const getUser = async () => {
   try {
     const response = await axios.get('http://api.infomed.develop.eiddew.com/api/user');
-    console.log('User data:', response.data);
   } catch (error) {
     console.error('Failed to fetch user:', error);
   }

@@ -78,7 +78,6 @@ const register = async() => {
         password: password.value,
         role: selected_role.value
     }).then((response) => {
-        console.log(response);
         Swal.fire({
             title: "Success",
             text: response.data.message,
@@ -102,8 +101,6 @@ const getRoles = async() => {
         name: role.name
       })
     })
-
-    console.log(roles.value)
   }).catch((error) => {
 
   })

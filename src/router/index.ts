@@ -36,7 +36,25 @@ const router = createRouter({
       name:'dashboard',
       component: () => import('../views/dashboard/ViewPatients.vue'),
       meta: {
-        permission: 'view_medical_record',
+        permissions: ['view_medical_records'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/medical-record/:client_id',
+      name:'medical-record',
+      component: () => import('../views/MedicalRecords.vue'),
+      meta: {
+        permissions: ['view_own_medical_records'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/billing-information',
+      name:'billing-information',
+      component: () => import('../views/BillingInformation.vue'),
+      meta: {
+        permissions: ['view_billing_information'],
         middleware: [requireAuth]
       },
     },
@@ -48,7 +66,7 @@ router.beforeEach(
     (
         to: RouteLocationNormalized,
         from: RouteLocationNormalized,
-        next: NavigationGuardNext
+        next: NavigationGuardNext,
     ) => {
 
 
@@ -56,11 +74,13 @@ router.beforeEach(
         return next();
       }
       const middleware = to.meta.middleware as any;
+      const permissions = to.meta.permissions as any;
 
       const context = {
         to,
         from,
         next,
+        permissions
       };
 
       return middleware[0]({
