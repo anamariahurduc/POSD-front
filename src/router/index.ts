@@ -1,5 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized} from 'vue-router'
 import HomeView from '../views/HomePage.vue'
+import requireAuth from "@/router/middleware/requireAuth";
+import middlewarePipeline from "@/router/middlewarePipeline";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,10 +34,60 @@ const router = createRouter({
     {
       path:'/dashboard',
       name:'dashboard',
-      component: () => import('../views/dashboard/ViewPatients.vue')
+      component: () => import('../views/dashboard/ViewPatients.vue'),
+      meta: {
+        permissions: ['view_medical_records'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/medical-record/:client_id',
+      name:'medical-record',
+      component: () => import('../views/MedicalRecords.vue'),
+      meta: {
+        permissions: ['view_own_medical_records'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/billing-information',
+      name:'billing-information',
+      component: () => import('../views/BillingInformation.vue'),
+      meta: {
+        permissions: ['view_billing_information'],
+        middleware: [requireAuth]
+      },
     },
 
   ]
 })
+
+router.beforeEach(
+    (
+        to: RouteLocationNormalized,
+        from: RouteLocationNormalized,
+        next: NavigationGuardNext,
+    ) => {
+
+
+      if (!to.meta.middleware) {
+        return next();
+      }
+      const middleware = to.meta.middleware as any;
+      const permissions = to.meta.permissions as any;
+
+      const context = {
+        to,
+        from,
+        next,
+        permissions
+      };
+
+      return middleware[0]({
+        ...context,
+        next: middlewarePipeline(context, middleware, 1),
+      });
+    }
+);
 
 export default router

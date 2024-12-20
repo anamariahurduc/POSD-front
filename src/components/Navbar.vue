@@ -42,7 +42,6 @@ const router = useRouter();
 
 const logout = async () => {
     await axios.post('http://api.infomed.develop.eiddew.com/api/logout').then((response) => {
-      console.log(response);
       cookies.remove("token");
       router.push('/login');
     }).catch((error) => {
