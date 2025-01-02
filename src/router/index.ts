@@ -36,7 +36,7 @@ const router = createRouter({
       name:'dashboard',
       component: () => import('../views/dashboard/ViewPatients.vue'),
       meta: {
-        permissions: ['view_medical_records'],
+        permissions: ['view_all_users'],
         middleware: [requireAuth]
       },
     },
@@ -58,7 +58,24 @@ const router = createRouter({
         middleware: [requireAuth]
       },
     },
-
+    {
+      path:'/patients',
+      name:'patients',
+      component: () => import('../views/Patients.vue'),
+      meta: {
+        permissions: ['view_medical_records'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/patient/:patient_id',
+      name:'patient',
+      component: () => import('../views/Patient.vue'),
+      meta: {
+        permissions: [['view_medical_records'], ['view_own_medical_records']],
+        middleware: [requireAuth]
+      },
+    },
   ]
 })
 

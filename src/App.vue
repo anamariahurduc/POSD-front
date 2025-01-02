@@ -1,22 +1,14 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {RouterLink, RouterView, useRoute} from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import Navbar from "@/components/Navbar.vue";
+
+const route = useRoute();
+
 </script>
 
 <template>
-<!--  <header>-->
-<!--    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />-->
-<!--    <link href="./output.css" rel="stylesheet">-->
-<!--    <div class="wrapper">-->
-<!--      <HelloWorld msg="You did it!" />-->
-
-<!--      <nav>-->
-<!--        <RouterLink to="/">Home</RouterLink>-->
-<!--        <RouterLink to="/about">About</RouterLink>-->
-<!--      </nav>-->
-<!--    </div>-->
-<!--  </header>-->
-
+  <Navbar v-if="route.name !== 'login' && route.name !== 'register'"></Navbar>
   <RouterView />
 </template>
 

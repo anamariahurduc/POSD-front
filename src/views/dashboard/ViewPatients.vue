@@ -1,16 +1,8 @@
 <template>
-  <Navbar></Navbar>
     <div class="w-full p-12">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                 <div>
-<!--                    <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">-->
-<!--                        <span class="sr-only">Action button</span>-->
-<!--                        Action-->
-<!--                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">-->
-<!--                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>-->
-<!--                        </svg>-->
-<!--                    </button>-->
                     <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
                             <li>
@@ -105,7 +97,8 @@ import {onMounted, ref} from "vue";
 import {useCookies} from "vue3-cookies";
 
 const users = ref([]);
-const { cookies } = useCookies();
+const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9cd');
+const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
 
 function hexStringToUint8Array(hexString) {
   const bytes = new Uint8Array(hexString.length / 2);
@@ -148,8 +141,8 @@ async function decryptAES(encryptedData, key, iv) {
 
 const getUsers = (async () => {
     await axios.get('http://api.infomed.develop.eiddew.com/api/users').then(async (response) => {
-      const keyArray = hexStringToUint8Array(response.data.key);
-      const ivArray = hexStringToUint8Array(response.data.iv);
+      const keyArray = hexStringToUint8Array(key.value);
+      const ivArray = hexStringToUint8Array(iv.value);
 
       const encryptedArray = base64ToUint8Array(response.data.encrypted_data);
       const decryptedText = await decryptAES(encryptedArray, keyArray, ivArray);
