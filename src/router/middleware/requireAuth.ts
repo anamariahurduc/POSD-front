@@ -21,15 +21,16 @@ try {
               let role = response.data.role;
               switch (role.name) {
                   case 'doctor':
-                      router.push('dashboard');
+                      router.push('patients');
                       break;
                   case 'patient':
                       router.push('medical-record/' + response.data.user.id);
                       break;
                   case 'nurse':
-                      router.push('dashboard');
+                      router.push('patients');
                       break;
                   case 'insurer':
+                      router.push('billing-information');
                       break;
               }
           }
