@@ -10,7 +10,7 @@
 
     <div class="flex space-x-7 mx-5 mt-28 justify-center">
       <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
-        <RouterLink :to="'/patient/medical-records/' + patient_id">
+        <RouterLink :to="'/patient/' + patient_id + '/medical-records'">
           <div class="cursor-pointer p-2">
             <img class="h-72 px-3 bg-white" src="@/assets/img/medical-records.jpg">
             <p>Medical record</p>
