@@ -68,11 +68,20 @@ const router = createRouter({
       },
     },
     {
-      path:'/patient/medical-records/:patient_id',
+      path:'/patient/:patient_id/medical-records',
       name:'medical_records',
       component: () => import('../views/MedicalRecords.vue'),
       meta: {
         permissions: [['view_medical_records'], ['view_own_medical_records']],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/patient/:patient_id/medical-records/:record_id',
+      name:'edit_medical_records',
+      component: () => import('../views/EditMedicalRecords.vue'),
+      meta: {
+        permissions: ['edit_medical_records'],
         middleware: [requireAuth]
       },
     },
