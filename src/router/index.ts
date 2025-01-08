@@ -105,7 +105,7 @@ const router = createRouter({
     },
     {
       path:'/patient/:patient_id/billing-informations',
-      name:'billing-information',
+      name:'billing-informations',
       component: () => import('@/views/billing_informations/BillingInformation.vue'),
       meta: {
         permissions: ['view_billing_information'],

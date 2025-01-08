@@ -22,55 +22,38 @@
             <label class="text-sm text-fuchsia-800 mt-5" for="doctor">Services</label>
             <template v-for="key in Object.keys(billing_information.services)">
               <div>
-                {{key}}
+                <span class="font-bold text-fuchsia-800">{{billing_information.services[key].service_name}}:</span>
+                <div>
+                - {{billing_information.services[key].price}} RON
+                </div>
               </div>
             </template>
           </div>
-<!--          <template v-if="button_open == false">-->
-<!--            <button @click="openMedicationInputs()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Add medication</button>-->
-<!--          </template>-->
-<!--          <template v-if="add_medication">-->
-<!--            <div class="flex flex-col">-->
-<!--              <label class="text-sm text-fuchsia-800 mt-4" for="doctor">Name</label>-->
-<!--              <input v-model="medication.name" type="text" class="border border-1 p-1 rounded-md">-->
-<!--            </div>-->
-<!--            <div class="flex flex-col">-->
-<!--              <label class="text-sm text-fuchsia-800" for="doctor">Dose</label>-->
-<!--              <select v-model="medication.dose" id="doctor" class="border border-1 rounded-md p-1">-->
-<!--                <option>5 mg</option>-->
-<!--                <option>10 mg</option>-->
-<!--                <option>25 mg</option>-->
-<!--                <option>50 mg</option>-->
-<!--                <option>100 mg</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--            <div class="flex flex-col">-->
-<!--              <label class="text-sm text-fuchsia-800" for="doctor">Frequency</label>-->
-<!--              <select v-model="medication.frequency" id="doctor" class="border border-1 rounded-md p-1">-->
-<!--                <option>once a day</option>-->
-<!--                <option>twice a day</option>-->
-<!--                <option>three times a day</option>-->
-<!--                <option>once a week</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--            <div class="flex flex-col">-->
-<!--              <label class="text-sm text-fuchsia-800" for="doctor">Administration</label>-->
-<!--              <select v-model="medication.administration" id="doctor" class="border border-1 rounded-md p-1">-->
-<!--                <option>subcutaneous injection</option>-->
-<!--                <option>oral</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--            <button @click="addMedication()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 mt-4 rounded-md text-white">Add</button>-->
-<!--          </template>-->
-
-<!--          <div class="flex flex-col">-->
-<!--            <label class="text-sm text-fuchsia-800 mt-5" for="doctor">Notes</label>-->
-<!--            <textarea v-model="recipe.notes" type="text" class="border border-1 p-1 rounded-md"/>-->
-<!--          </div>-->
-<!--          <div class="mt-5 ml-20">-->
-<!--            <button @click="updateRecipe()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Save</button>-->
-<!--            <RouterLink :to="'/patient/' + patient_id + '/recipes'" class="items-center font-semibold bg-red-500 px-2 py-1 ml-5 rounded-md text-white">Cancel</RouterLink>-->
-<!--          </div>-->
+          <template v-if="button_open == false">
+            <button @click="openServicesInputs()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Add service</button>
+          </template>
+          <template v-if="add_service">
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800 mt-4" for="doctor">Type</label>
+              <select v-model="service.type" id="doctor" class="border border-1 rounded-md p-1">
+                <option>lab tests</option>
+                <option>consultations</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800" for="doctor">Name</label>
+              <input v-model="service.service_name" type="text" class="border border-1 p-1 rounded-md">
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800" for="doctor">Price</label>
+              <input v-model="service.price" type="text" class="border border-1 p-1 rounded-md">
+            </div>
+            <button @click="addService()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 mt-4 rounded-md text-white">Add</button>
+          </template>
+          <div class="mt-5 ml-20">
+            <button @click="updateInvoice()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Save</button>
+            <RouterLink :to="'/patient/' + patient_id + '/billing-informations'" class="items-center font-semibold bg-red-500 px-2 py-1 ml-5 rounded-md text-white">Cancel</RouterLink>
+          </div>
         </div>
       </div>
     </template>
@@ -90,14 +73,17 @@ const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
 const route = useRoute();
 const patient_id = route.params.patient_id;
 const billing_information_id = route.params.billing_information_id;
-const billing_information = ref({});
+const billing_information = ref({
+  services: {}
+});
 const user = ref({});
-const doctors = ref([]);
-const recipes = ref([]);
 const isLoading = ref(true);
-const add_medication = ref(false);
+const add_service = ref(false);
 const button_open = ref(false);
-const medication = ref({});
+const service = ref({
+  price: '',
+  service_name: ''
+});
 function hexStringToUint8Array(hexString) {
   const bytes = new Uint8Array(hexString.length / 2);
   for (let i = 0; i < hexString.length; i += 2) {
@@ -168,21 +154,21 @@ async function encryptAES(data, key, iv) {
   return new Uint8Array(encryptedData);
 }
 
-const openMedicationInputs = async () => {
+const openServicesInputs = async () => {
   button_open.value = true;
-  add_medication.value = true;
+  add_service.value = true;
 }
 
-const addMedication = async () => {
-  recipe.value.medications[medication.value.name] = {
-    administration: medication.value.administration,
-    dose: medication.value.dose,
-    frequency: medication.value.frequency
+const addService = async () => {
+  billing_information.value.services[service.value.type] = {
+    price: service.value.price,
+    service_name: service.value.service_name
   }
 
-  add_medication.value = false;
+  console.log(billing_information.value);
+  add_service.value = false;
   button_open.value = false;
-  medication.value = {};
+  service.value = {};
 }
 
 const getAge = (date_of_birth: string) => {
@@ -219,13 +205,20 @@ const getBillingInfo = async () => {
         const encryptedArray = base64ToUint8Array(response.data.encrypted_data);
         const decryptedText = await decryptAES(encryptedArray, keyArray, ivArray);
 
-        console.log(decryptedText);
         billing_information.value = JSON.parse(decryptedText);
+        billing_information.value.services = JSON.parse(billing_information.value.services);
       })
 }
 
 const updateInvoice = async () => {
-  const updatedRecipe = JSON.stringify(recipe.value);
+  let price = 0;
+  Object.keys(billing_information.value.services).forEach((service_key) => {
+    price += Number(billing_information.value.services[service_key].price);
+  })
+
+  billing_information.value.amount = price.toString();
+
+  const updatedRecipe = JSON.stringify(billing_information.value);
 
   const keyArray = hexStringToUint8Array(key.value);
   const ivArray = hexStringToUint8Array(iv.value);
@@ -234,7 +227,7 @@ const updateInvoice = async () => {
 
   const encryptedBase64Data = uint8ArrayToBase64(encryptedData);
 
-  axios.put('http://api.infomed.develop.eiddew.com/api/recipes/' + recipe_id, {
+  axios.put('http://api.infomed.develop.eiddew.com/api/billing-informations/' + billing_information_id, {
     encrypted_data: encryptedBase64Data
   })
       .then(response => {
@@ -244,7 +237,7 @@ const updateInvoice = async () => {
           icon: "success"
         });
 
-        router.push({ name: 'recipes'});
+        router.push({ name: 'billing-informations'});
       })
       .catch(error => {
         console.error('Error updating the recipe:', error);

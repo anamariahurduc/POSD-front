@@ -64,7 +64,7 @@
               <td class="px-6">
                 <div class="flex space-x-3">
                   <RouterLink :to="'/patient/' + patient_id + '/billing-informations/' + billing_info.id" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit invoice</RouterLink>
-                  <button @click="deleteRecipe(recipe.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete invoice</button>
+                  <button @click="deleteInvoice(billing_info.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete invoice</button>
                 </div>
               </td>
             </tr>
@@ -82,6 +82,7 @@ import {onMounted} from "vue";
 import {ref} from "vue";
 import {useRoute} from "vue-router";
 import router from "@/router";
+import Swal from "sweetalert2";
 
 const user = ref({});
 const route = useRoute();
@@ -127,6 +128,34 @@ async function decryptAES(encryptedData, key, iv) {
   );
 
   return new TextDecoder().decode(decrypted);
+}
+
+const deleteInvoice = (id: number) => {
+  Swal.fire({
+    title: "Are you sure you want to delete this recipe?",
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+  }).then(async(result) => {
+    if (result.isConfirmed) {
+      await axios.delete('http://api.infomed.develop.eiddew.com/api/billing-informations/' + id)
+          .then((response) => {
+            console.log(response)
+            if(response.data.status === true) {
+              let i = billing_infos.value.map(item => item.id).indexOf(id);
+              if(i >= 0) {
+                billing_infos.value.splice(i, 1);
+              }
+            }
+            else {
+              Swal.fire({
+                title: "Something went wrong",
+                text: "Please try again later",
+                confirmButtonText: "Ok",
+              })
+            }
+          })
+    }
+  });
 }
 const getAge = (date_of_birth: string) => {
   const birth = new Date(date_of_birth);
