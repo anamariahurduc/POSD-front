@@ -85,6 +85,24 @@ const router = createRouter({
         middleware: [requireAuth]
       },
     },
+    {
+      path:'/patient/:patient_id/recipes',
+      name:'recipes',
+      component: () => import('../views/Recipes.vue'),
+      meta: {
+        permissions: [['view_medical_records'], ['view_own_medical_records']],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/patient/:patient_id/recipes/:recipe_id',
+      name:'edit_recipe',
+      component: () => import('../views/EditRecipe.vue'),
+      meta: {
+        permissions: [['edit_prescriptions'],['view_medical_records'], ['view_own_medical_records']],
+        middleware: [requireAuth]
+      },
+    },
   ]
 })
 
