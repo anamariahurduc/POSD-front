@@ -10,7 +10,7 @@
     <div class="w-full p-12">
       <p class="text-3xl text-fuchsia-800 font-semibold">Medical records</p>
       <div class="flex justify-end mr-1">
-        <button v-if="auth_user.roles[0].name === 'doctor' || auth_user.roles[0].name === 'administrator'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add medical record</button>
+        <RouterLink :to="'/patient/' + patient_id + '/medical-records/add'" v-if="auth_user.roles[0].name === 'doctor' || auth_user.roles[0].name === 'administrator'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add medical record</RouterLink>
         <button v-else disabled class="bg-gray-500 text-white font-semibold px-3 py-2 rounded-md cursor-not-allowed">Add medical record</button>
       </div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-16">
@@ -37,6 +37,9 @@
             </th>
             <th scope="col" class="px-6 py-3">
               Recipes
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Status
             </th>
             <th scope="col" class="px-6 py-3">
               Actions
@@ -75,15 +78,21 @@
               </td>
               <td>
                 <div class="px-6">
-                  <div class="text-base font-semibold" v-for="id in JSON.parse(medical_record.lab_result_ids)">
+                  <div class="text-base font-semibold" v-for="id in JSON.parse(medical_record.lab_result_ids)" v-if="JSON.parse(medical_record.lab_result_ids).length > 0">
                     <RouterLink :to="'/patient/' + patient_id + '/lab-results/' + id" class="text-blue-500 cursor-pointer font-semibold underline">{{ id }}</RouterLink>
                   </div>
+                  <p v-else>-</p>
                 </div>
               </td>
               <td>
                 <div class="px-6">
-                  <RouterLink :to="'/patient/' + patient_id + '/recipes/' + medical_record.recipe_id" class="text-blue-500 cursor-pointer font-semibold underline">{{ medical_record.recipe_id }}</RouterLink>
+                  <RouterLink v-if="medical_record.recipe_id !== 0" :to="'/patient/' + patient_id + '/recipes/' + medical_record.recipe_id" class="text-blue-500 cursor-pointer font-semibold underline">{{ medical_record.recipe_id }}</RouterLink>
+                  <p v-else>-</p>
                 </div>
+              </td>
+              <td>
+                <p class="text-green-500 font-semibold" v-if="medical_record.status === 'active'">Active</p>
+                <p class="text-red-500 font-semibold" v-if="medical_record.status === 'inactive'">Inactive</p>
               </td>
               <td class="px-6">
                 <div class="flex space-x-3">

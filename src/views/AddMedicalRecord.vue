@@ -7,7 +7,7 @@
       <p>Date of birth: {{getAge(user.date_of_birth)}}</p>
       <p>Gender: {{user.gender}}</p>
     </div>
-    <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Edit medical record</p>
+    <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Add medical record</p>
     <div class="w-full flex justify-center">
       <div class="w-[450px] mt-10 p-8 border border-1 border-gray-100 shadow-lg rounded-md space-y-1">
         <div class="flex flex-col">
@@ -71,8 +71,17 @@ const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9c
 const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
 const route = useRoute();
 const patient_id = route.params.patient_id;
-const record_id = route.params.record_id;
-const medical_record = ref({});
+const medical_record = ref({
+  id: 0,
+  patient_id: patient_id,
+  doctor_id: 0,
+  diagnosis: "",
+  lab_result_ids: [],
+  recipe_id: 0,
+  procedures: "",
+  notes: "",
+  status: "active"
+});
 const user = ref({});
 const doctors = ref([]);
 const recipes = ref([]);
@@ -84,12 +93,12 @@ const saveChanges = async () => {
   const payload = {
     medical_record: medical_record.value
   }
-  await axios.put('http://api.infomed.develop.eiddew.com/api/medical-records/' + medical_record.value.id, payload)
+  await axios.post('http://api.infomed.develop.eiddew.com/api/medical-records', payload)
       .then(async (response) => {
         if(response.data.status === true) {
           Swal.fire({
             title: "Success",
-            text: "Medical record updated successfully!",
+            text: "Medical record saved successfully!",
             icon: "success"
           })
           router.push('/patient/' + patient_id + '/medical-records');
@@ -200,26 +209,6 @@ const getUser = async() => {
         user.value =  JSON.parse(decryptedText);
       })
 }
-const getMedicalRecord = async () => {
-  await axios.get('http://api.infomed.develop.eiddew.com/api/medical-records/' + record_id)
-      .then(async (response) => {
-        const keyArray = hexStringToUint8Array(key.value);
-        const ivArray = hexStringToUint8Array(iv.value);
-
-        const encryptedArray = base64ToUint8Array(response.data.encrypted_data);
-        const decryptedText = await decryptAES(encryptedArray, keyArray, ivArray);
-
-        medical_record.value = JSON.parse(decryptedText);
-
-        medical_record.value.lab_result_ids = JSON.parse(medical_record.value.lab_result_ids);
-        medical_record.value.lab_result_ids.forEach(id => {
-          let lab_result = lab_results.value.find(el => el.id === id);
-          if(lab_result !== undefined) {
-            selected_lab_results.value.push(lab_result);
-          }
-        })
-      })
-}
 
 const getLabResults = async () => {
   axios.get('http://api.infomed.develop.eiddew.com/api/lab-results',
@@ -261,7 +250,6 @@ onMounted(async() => {
   await getDoctors();
   await getRecipes();
   await getLabResults();
-  await getMedicalRecord();
 })
 </script>
 
