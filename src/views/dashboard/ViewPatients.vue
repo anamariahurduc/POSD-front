@@ -160,4 +160,5 @@ const getUsers = (async () => {
 onMounted(() => {
   getUsers();
 })
+
 </script>
