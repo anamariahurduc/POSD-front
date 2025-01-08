@@ -79,7 +79,7 @@ const router = createRouter({
     {
       path:'/patient/:patient_id/medical-records/add',
       name:'add_medical_records',
-      component: () => import('../views/AddMedicalRecord.vue'),
+      component: () => import('../views/medical_records/AddMedicalRecord.vue'),
       meta: {
         permissions: ['add_medical_records'],
         middleware: [requireAuth]
@@ -127,6 +127,24 @@ const router = createRouter({
       component: () => import('@/views/billing_informations/EditBillingInformation.vue'),
       meta: {
         permissions: [['view_billing_information'],['add_billing_information']],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/patient/:patient_id/laboratory-results',
+      name:'view-lab-results',
+      component: () => import('@/views/lab_results/ViewLabResults.vue'),
+      meta: {
+        permissions: ['view_lab_results'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/patient/:patient_id/laboratory-results/add',
+      name:'add-lab-results',
+      component: () => import('@/views/lab_results/AddLabResult.vue'),
+      meta: {
+        permissions: ['add_lab_results'],
         middleware: [requireAuth]
       },
     },
