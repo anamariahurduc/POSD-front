@@ -10,7 +10,7 @@
     <div class="w-full p-12">
       <p class="text-3xl text-fuchsia-800 font-semibold">Recipes</p>
       <div class="flex justify-end mr-1">
-        <button class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add recipe</button>
+        <RouterLink :to="'/patient/' + patient_id + '/recipes/add-recipe'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add recipe</RouterLink>
       </div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-16">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -53,7 +53,7 @@
                   <div class="text-base font-semibold">
                     <template v-for="(key) in Object.keys(recipe.medications)">
                       <div>
-                        <span class="font-bold text-fuchsia-800">{{key}}:</span> {{recipe.medications[key].dose}}, {{recipe.medications[key].frequency}} {{recipe.medications[key].administration}}
+                        <span class="font-bold text-fuchsia-800">{{key}}:</span> {{recipe.medications[key].dose}}, {{recipe.medications[key].frequency}}, {{recipe.medications[key].administration}}
                       </div>
                     </template>
                   </div>
@@ -97,7 +97,7 @@ const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
 
 const deleteRecipe = (id: number) => {
   Swal.fire({
-    title: "Are you sure you want to delete this record?",
+    title: "Are you sure you want to delete this recipe?",
     showCancelButton: true,
     confirmButtonText: "Yes",
   }).then(async(result) => {
@@ -205,10 +205,6 @@ const getUser = async() => {
 
         user.value =  JSON.parse(decryptedText);
       })
-}
-
-const addRecipe = () => {
-  router.push('')
 }
 
 onMounted(async () => {
