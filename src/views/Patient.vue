@@ -19,8 +19,10 @@
       </div>
       <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
         <div class="cursor-pointer p-2">
-          <img class="h-72 bg-white pb-5" src="@/assets/img/image.png">
-          <p>Laboratory results</p>
+          <RouterLink :to="'/patient/' + patient_id + '/laboratory-results'">
+            <img class="h-72 bg-white pb-5" src="@/assets/img/image.png">
+            <p>Laboratory results</p>
+          </RouterLink>
         </div>
       </div>
       <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
