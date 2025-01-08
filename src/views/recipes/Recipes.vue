@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="flex space-x-10 justify-center text-xl font-semibold p-3 bg-fuchsia-800 text-white">
+      <button class="flex justify-start" @click="goToPacientPage()">Go Back</button>
       <p>First name: {{user.first_name}}</p>
       <p>Last name: {{user.last_name}}</p>
       <p>Email: {{user.email}}</p>
@@ -173,10 +174,9 @@ const getRecipes = async () => {
         const encryptedArray = base64ToUint8Array(response.data.encrypted_data);
         const decryptedText = await decryptAES(encryptedArray, keyArray, ivArray);
         const decryptedData = JSON.parse(decryptedText);
-        decryptedData.forEach((medical_record) => {
-          medical_record.medications = JSON.parse(medical_record.medications);
-
-          recipes.value.push(medical_record);
+        decryptedData.forEach((recipe) => {
+          recipe.medications = JSON.parse(recipe.medications);
+          recipes.value.push(recipe);
         })
       })
 }
@@ -205,6 +205,10 @@ const getUser = async() => {
 
         user.value =  JSON.parse(decryptedText);
       })
+}
+
+const goToPacientPage = () => {
+  router.push({name: 'patient', params: {patient_id: patient_id}});
 }
 
 onMounted(async () => {

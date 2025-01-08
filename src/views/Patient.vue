@@ -35,8 +35,12 @@
       </div>
       <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
         <div class="cursor-pointer p-2">
-          <img class="h-72 bg-white" src="@/assets/img/billing.jpg">
-          <p>Billing info</p>
+          <RouterLink :to="'/patient/' + patient_id + '/billing-informations'">
+            <div class="cursor-pointer p-2">
+              <img class="h-72 bg-white" src="@/assets/img/billing.jpg">
+              <p>Billing info</p>
+            </div>
+          </RouterLink>
         </div>
       </div>
     </div>
