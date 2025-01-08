@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex space-x-10 justify-center text-xl font-semibold p-3 bg-fuchsia-800 text-white">
+    <div class="flex space-x-10 justify-center text-xl font-semibold p-3 bg-fuchsia-800 text-white" v-if="auth_user.roles[0].name !== 'patient'">
       <p>First name: {{user.first_name}}</p>
       <p>Last name: {{user.last_name}}</p>
       <p>Email: {{user.email}}</p>
@@ -33,7 +33,7 @@
           </RouterLink>
         </div>
       </div>
-      <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
+      <div v-if="auth_user.roles[0].name === 'administrator' || auth_user.roles[0].name === 'patient' || auth_user.roles[0].name === 'doctor'" class="font-bold text-4xl p-2 text-center flex items-center justify-center">
         <div class="cursor-pointer p-2">
           <RouterLink :to="'/patient/' + patient_id + '/billing-informations'">
             <div class="cursor-pointer p-2">
@@ -51,6 +51,7 @@
 import axios from "axios";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
+import {useAuthUserStore} from "@/store/AuthUser";
 
 const route = useRoute();
 const patient_id = route.params.patient_id;
@@ -58,6 +59,8 @@ const user = ref({});
 
 const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9cd');
 const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
+const authUserStore = useAuthUserStore();
+const auth_user = authUserStore.getUser();
 
 const getAge = (date_of_birth: string) => {
   const birth = new Date(date_of_birth);

@@ -2,6 +2,7 @@ import type { NavigationGuardNext,RouteLocationNormalized } from 'vue-router';
 import axios from "axios";
 import {useCookies} from "vue3-cookies";
 import {useRouter} from "vue-router";
+import {useAuthUserStore} from "@/store/AuthUser";
 
 export default async function requireAuth({
   to,
@@ -11,12 +12,14 @@ export default async function requireAuth({
   next: NavigationGuardNext;
 }) {
     const { cookies } = useCookies();
-  const router = useRouter();
+    const router = useRouter();
+    const authUserStore = useAuthUserStore();
 try {
     axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get("token")}`;
   await axios.post('http://api.infomed.develop.eiddew.com/api/user', {
       permissions: to.meta.permissions})
       .then((response) => {
+          authUserStore.setUser(response.data.user);
           if(response.data.can_access === false) {
               let role = response.data.role;
               switch (role.name) {

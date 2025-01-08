@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex space-x-10 justify-center text-xl font-semibold p-3 bg-fuchsia-800 text-white">
+    <div v-if="auth_user.roles[0].name !== 'patient'" class="flex space-x-10 justify-center text-xl font-semibold p-3 bg-fuchsia-800 text-white">
       <p>First name: {{user.first_name}}</p>
       <p>Last name: {{user.last_name}}</p>
       <p>Email: {{user.email}}</p>
@@ -10,7 +10,8 @@
     <div class="w-full p-12">
       <p class="text-3xl text-fuchsia-800 font-semibold">Medical records</p>
       <div class="flex justify-end mr-1">
-        <button class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add medical record</button>
+        <button v-if="auth_user.roles[0].name === 'doctor' || auth_user.roles[0].name === 'administrator'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add medical record</button>
+        <button v-else disabled class="bg-gray-500 text-white font-semibold px-3 py-2 rounded-md cursor-not-allowed">Add medical record</button>
       </div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-16">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -86,8 +87,10 @@
               </td>
               <td class="px-6">
                 <div class="flex space-x-3">
-                  <RouterLink :to="'/patient/' + patient_id + '/medical-records/' + medical_record.id" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit record</RouterLink>
-                  <button @click="deleteRecord(medical_record.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete record</button>
+                  <RouterLink v-if="auth_user.roles[0].name === 'doctor' || auth_user.roles[0].name === 'administrator'" :to="'/patient/' + patient_id + '/medical-records/' + medical_record.id" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit record</RouterLink>
+                  <button v-else disabled class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Edit record</button>
+                  <button v-if="auth_user.roles[0].name === 'administrator'" @click="deleteRecord(medical_record.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete record</button>
+                  <button v-else disabled class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Delete record</button>
                 </div>
               </td>
             </tr>
@@ -105,11 +108,14 @@ import {useRoute} from "vue-router";
 import axios from "axios";
 import {onMounted, ref} from "vue";
 import Swal from "sweetalert2";
+import {useAuthUserStore} from "@/store/AuthUser";
 
 const route = useRoute();
 const patient_id = route.params.patient_id;
 const medical_records = ref([]);
 const user = ref({});
+const authUserStore = useAuthUserStore();
+const auth_user = authUserStore.getUser();
 
 const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9cd');
 const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
