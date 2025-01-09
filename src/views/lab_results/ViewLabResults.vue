@@ -60,9 +60,9 @@
 
               <td class="px-6">
                 <div class="flex space-x-3">
-                  <RouterLink v-if="auth_user.roles[0].name === 'doctor' || auth_user.roles[0].name === 'administrator'" :to="'/patient/' + patient_id + '/laboratory-results/' + lab_results.id" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit result</RouterLink>
+                  <RouterLink v-if="auth_user.roles[0].name === 'doctor' || auth_user.roles[0].name === 'administrator'" :to="'/patient/' + patient_id + '/laboratory-results/' + lab_result.id" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit result</RouterLink>
                   <button v-else disabled class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Edit result</button>
-                  <button v-if="auth_user.roles[0].name === 'administrator'" @click="deleteResult(lab_results.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete result</button>
+                  <button v-if="auth_user.roles[0].name === 'administrator'" @click="deleteResult(lab_result.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete result</button>
                   <button v-else disabled class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Delete result</button>
                 </div>
               </td>
