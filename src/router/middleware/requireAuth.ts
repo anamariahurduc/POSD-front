@@ -24,16 +24,16 @@ try {
               let role = response.data.role;
               switch (role.name) {
                   case 'doctor':
-                      router.push('patients');
+                      router.push('/patients');
                       break;
                   case 'patient':
-                      router.push('medical-record/' + response.data.user.id);
+                      router.push('/patient/' + response.data.user.id);
                       break;
                   case 'nurse':
-                      router.push('patients');
+                      router.push('/patients');
                       break;
                   case 'insurer':
-                      router.push('billing-information');
+                      router.push('/billing-informations');
                       break;
               }
           }

@@ -90,7 +90,7 @@ const router = createRouter({
       name:'recipes',
       component: () => import('../views/recipes/Recipes.vue'),
       meta: {
-        permissions: [['view_medical_records'], ['view_own_medical_records']],
+        permissions: [['view_prescriptions'], ['view_own_prescriptions']],
         middleware: [requireAuth]
       },
     },
@@ -99,7 +99,7 @@ const router = createRouter({
       name:'edit_recipe',
       component: () => import('../views/recipes/EditRecipe.vue'),
       meta: {
-        permissions: [['edit_prescriptions'],['view_medical_records'], ['view_own_medical_records']],
+        permissions: ['edit_prescriptions'],
         middleware: [requireAuth]
       },
     },
@@ -108,7 +108,7 @@ const router = createRouter({
       name:'add_recipe',
       component: () => import('../views/recipes/AddRecipe.vue'),
       meta: {
-        permissions: [['edit_prescriptions'],['view_medical_records'], ['view_own_medical_records']],
+        permissions: ['add_prescriptions'],
         middleware: [requireAuth]
       },
     },
@@ -117,7 +117,7 @@ const router = createRouter({
       name:'billing-informations',
       component: () => import('@/views/billing_informations/BillingInformation.vue'),
       meta: {
-        permissions: ['view_billing_information'],
+        permissions: [['view_billing_information'], ['view_own_billing_information']],
         middleware: [requireAuth]
       },
     },
@@ -126,7 +126,7 @@ const router = createRouter({
       name:'edit-billing-information',
       component: () => import('@/views/billing_informations/EditBillingInformation.vue'),
       meta: {
-        permissions: [['view_billing_information'],['add_billing_information']],
+        permissions: [['edit_billing_information']],
         middleware: [requireAuth]
       },
     },
@@ -135,7 +135,7 @@ const router = createRouter({
       name:'add-billing-information',
       component: () => import('@/views/billing_informations/AddBillingInformation.vue'),
       meta: {
-        permissions: [['view_billing_information'],['add_billing_information']],
+        permissions: ['add_billing_information'],
         middleware: [requireAuth]
       },
     },

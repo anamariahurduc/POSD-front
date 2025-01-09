@@ -34,6 +34,15 @@
                               <input
                                       class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                       type="password" placeholder="Password" v-model="password"/>
+                              <label class="text-[#8d2188] font-semibold">Date of birth</label>
+                              <input
+                                  class="w-full px-8 py-4 mb-2 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                  type="date" placeholder="Email" v-model="date_of_birth" />
+                              <label class="text-[#8d2188] font-semibold">Gender</label>
+                              <select v-model="gender" class="py-3 px-4 pe-9 mb-2 block w-full bg-gray-100 border-gray-200 border rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                                  <option>Male</option>
+                                  <option>Female</option>
+                              </select>
                               <button @click="register()"
                                       class="mt-5 tracking-wide font-semibold bg-[#ba29b3] text-gray-100 w-full py-4 rounded-lg hover:bg-[#8d2188] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                   <svg class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
@@ -68,15 +77,20 @@ const first_name = ref('');
 const last_name = ref('');
 const username = ref('');
 const password = ref('');
+const gender = ref('');
 const selected_role = ref('');
 const roles = ref([]);
+const date_of_birth = ref('');
+
 const register = async() => {
     await axios.post('http://api.infomed.develop.eiddew.com/api/register', {
         first_name: first_name.value,
         last_name: first_name.value,
         email: username.value,
         password: password.value,
-        role: selected_role.value
+        role: selected_role.value,
+        gender: gender.value,
+        date_of_birth: date_of_birth.value
     }).then((response) => {
         Swal.fire({
             title: "Success",
