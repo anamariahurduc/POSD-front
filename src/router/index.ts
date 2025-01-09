@@ -131,6 +131,15 @@ const router = createRouter({
       },
     },
     {
+      path:'/patient/:patient_id/billing-informations/add',
+      name:'add-billing-information',
+      component: () => import('@/views/billing_informations/AddBillingInformation.vue'),
+      meta: {
+        permissions: [['view_billing_information'],['add_billing_information']],
+        middleware: [requireAuth]
+      },
+    },
+    {
       path:'/patient/:patient_id/laboratory-results',
       name:'view-lab-results',
       component: () => import('@/views/lab_results/ViewLabResults.vue'),
