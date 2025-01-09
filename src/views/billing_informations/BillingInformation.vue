@@ -11,7 +11,7 @@
     <div class="w-full p-12">
       <p class="text-3xl text-fuchsia-800 font-semibold">Billing informations</p>
       <div class="flex justify-end mr-1">
-        <RouterLink :to="'/patient/' + patient_id + '/recipes/add-recipe'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add invoice</RouterLink>
+        <RouterLink :to="'/patient/' + patient_id + '/billing-informations/add'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add invoice</RouterLink>
       </div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-16">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
