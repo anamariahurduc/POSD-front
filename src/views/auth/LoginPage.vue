@@ -81,6 +81,7 @@ const login = async() => {
 
       router.push('dashboard');
     }).catch((error) => {
+      console.log('aaaaa', error)
         Swal.fire({
             title: "Error",
             text: error.response.data.message,

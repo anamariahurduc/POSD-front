@@ -199,8 +199,6 @@ const getBillingInfo = async () => {
           billing_info.services = JSON.parse(billing_info.services);
           billing_infos.value.push(billing_info);
         })
-
-        console.log(billing_infos.value);
       })
 }
 

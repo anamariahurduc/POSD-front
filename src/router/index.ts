@@ -148,6 +148,15 @@ const router = createRouter({
         middleware: [requireAuth]
       },
     },
+    {
+      path:'/patient/:patient_id/laboratory-results/:lab_result_id',
+      name:'edit-lab-results',
+      component: () => import('@/views/lab_results/EditLaboratoryResult.vue'),
+      meta: {
+        permissions: ['edit_lab_results'],
+        middleware: [requireAuth]
+      },
+    },
   ]
 })
 

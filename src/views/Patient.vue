@@ -17,7 +17,7 @@
           </div>
         </RouterLink>
       </div>
-      <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
+      <div v-if="auth_user.roles[0].name !== 'nurse'" class="font-bold text-4xl p-2 text-center flex items-center justify-center">
         <div class="cursor-pointer p-2">
           <RouterLink :to="'/patient/' + patient_id + '/laboratory-results'">
             <img class="h-72 bg-white pb-5" src="@/assets/img/image.png">
@@ -25,7 +25,7 @@
           </RouterLink>
         </div>
       </div>
-      <div class="font-bold text-4xl p-2 text-center flex items-center justify-center">
+      <div v-if="auth_user.roles[0].name !== 'nurse'" class="font-bold text-4xl p-2 text-center flex items-center justify-center">
         <div class="cursor-pointer p-2">
           <RouterLink :to="'/patient/' + patient_id + '/recipes'">
             <div class="cursor-pointer p-2">

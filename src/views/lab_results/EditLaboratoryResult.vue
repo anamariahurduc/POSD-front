@@ -7,7 +7,7 @@
       <p>Date of birth: {{ getAge(user.date_of_birth) }}</p>
       <p>Gender: {{ user.gender }}</p>
     </div>
-    <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Add laboratory result</p>
+    <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Edit laboratory result</p>
     <div class="w-full flex justify-center">
       <div class="w-[460px] mt-10 p-8 border border-1 border-gray-100 shadow-lg rounded-md space-y-1">
         <div class="flex flex-col">
@@ -20,10 +20,10 @@
             <p class="text-fuchsia-800 text-sm font-semibold">Property name</p>
             <p class="text-fuchsia-800 text-sm font-semibold">Property value</p>
           </div>
-            <div v-for="(result, result_index) in lab_result.results" class="grid grid-cols-2">
-              <p>{{ result_index }}</p>
-              <p>{{ result }}</p>
-            </div>
+          <div v-for="(result, result_index) in lab_result.results" class="grid grid-cols-2">
+            <p>{{ result_index }}</p>
+            <p>{{ result }}</p>
+          </div>
 
           <div class="flex space-x-2 items-center">
             <input class="border border-1 p-1 rounded-md" type="text" v-model="info">
@@ -60,13 +60,8 @@ const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9c
 const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');
 const route = useRoute();
 const patient_id = route.params.patient_id;
-const lab_result = ref({
-  id: 0,
-  patient_id: patient_id,
-  test_type: "",
-  results: {},
-  notes: "",
-});
+const lab_result_id = route.params.lab_result_id;
+const lab_result = ref({});
 const user = ref({});
 const router = useRouter();
 const info = ref("");
@@ -76,12 +71,12 @@ const saveChanges = async () => {
   const payload = {
     lab_result: lab_result.value
   }
-  await axios.post('http://api.infomed.develop.eiddew.com/api/lab-results', payload)
+  await axios.put('http://api.infomed.develop.eiddew.com/api/lab-results/' + lab_result_id, payload)
       .then(async (response) => {
         if (response.data.status === true) {
           Swal.fire({
             title: "Success",
-            text: "Laboratory result saved successfully!",
+            text: "Laboratory result updated successfully!",
             icon: "success"
           })
           router.push('/patient/' + patient_id + '/laboratory-results');
@@ -154,8 +149,23 @@ const getUser = async () => {
       })
 }
 
+const getLabResult = async () => {
+  await axios.get('http://api.infomed.develop.eiddew.com/api/lab-results/' + lab_result_id)
+      .then(async (response) => {
+        const keyArray = hexStringToUint8Array(key.value);
+        const ivArray = hexStringToUint8Array(iv.value);
+
+        const encryptedArray = base64ToUint8Array(response.data.encrypted_data);
+        const decryptedText = await decryptAES(encryptedArray, keyArray, ivArray);
+
+        lab_result.value = JSON.parse(decryptedText);
+        lab_result.value.results = JSON.parse(lab_result.value.results)
+      })
+}
+
 
 onMounted(async () => {
   await getUser();
+  await getLabResult();
 })
 </script>
