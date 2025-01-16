@@ -11,7 +11,8 @@
     <div class="w-full p-12">
       <p class="text-3xl text-fuchsia-800 font-semibold">Billing informations</p>
       <div class="flex justify-end mr-1">
-        <RouterLink :to="'/patient/' + patient_id + '/billing-informations/add'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add invoice</RouterLink>
+        <RouterLink :to="'/patient/' + patient_id + '/billing-informations/add'" v-if="auth_user.roles[0].name === 'administrator' || auth_user.roles[0].name === 'insurer'" class="bg-fuchsia-800 text-white font-semibold px-3 py-2 rounded-md">Add invoice</RouterLink>
+        <button v-else disabled class="font-semibold bg-gray-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Add invoice</button>
       </div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-16">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -63,8 +64,11 @@
               </td>
               <td class="px-6">
                 <div class="flex space-x-3">
-                  <RouterLink :to="'/patient/' + patient_id + '/billing-informations/' + billing_info.id" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit invoice</RouterLink>
-                  <button @click="deleteInvoice(billing_info.id)" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete invoice</button>
+                  <RouterLink :to="'/patient/' + patient_id + '/billing-informations/' + billing_info.id" v-if="auth_user.roles[0].name === 'administrator' || auth_user.roles[0].name === 'insurer'" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit invoice</RouterLink>
+                  <button v-else disabled class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Edit invoice</button>
+
+                  <button @click="deleteInvoice(billing_info.id)" v-if="auth_user.roles[0].name === 'administrator' || auth_user.roles[0].name === 'insurer'" class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white">Delete invoice</button>
+                  <button class="font-semibold bg-red-500 px-2 py-1 rounded-md text-white cursor-not-allowed">Delete invoice</button>
                 </div>
               </td>
             </tr>
@@ -83,11 +87,14 @@ import {ref} from "vue";
 import {useRoute} from "vue-router";
 import router from "@/router";
 import Swal from "sweetalert2";
+import {useAuthUserStore} from "@/store/AuthUser";
 
 const user = ref({});
 const route = useRoute();
 const patient_id = route.params.patient_id;
 const billing_infos = ref([]);
+const authUserStore = useAuthUserStore();
+const auth_user = authUserStore.getUser();
 
 const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9cd');
 const iv = ref('edfc99088cfa3fbb5da7eb1af5f15af3');

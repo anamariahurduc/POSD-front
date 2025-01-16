@@ -11,68 +11,72 @@
       Is loading...
     </template>
     <template v-else>
-    <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Edit recipe</p>
-    <div class="w-full flex justify-center">
-      <div class="w-80 mt-10">
-        <div class="flex flex-col">
-          <label class="text-sm text-fuchsia-800" for="doctor">Name</label>
-          <input v-model="recipe.name" type="text" class="border border-1 p-1 rounded-md">
-        </div>
-        <div class="flex flex-col">
-          <label class="text-sm text-fuchsia-800 mt-5" for="doctor">Medications</label>
-          <template v-for="key in Object.keys(recipe.medications)">
-            <div>
-              <span class="font-bold text-fuchsia-800">{{key}}:</span> {{ recipe.medications[key].dose }}, {{ recipe.medications[key].frequency }}, {{recipe.medications[key].administration}}
-            </div>
+      <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Edit recipe</p>
+      <div class="w-full flex justify-center">
+          <div class="w-[460px] mt-10 p-8 border border-1 border-gray-100 shadow-lg rounded-md space-y-1">
+            <div class="w-full flex justify-center">
+            <div class="w-80">
+          <div class="flex flex-col">
+            <label class="text-sm text-fuchsia-800" for="doctor">Name</label>
+            <input v-model="recipe.name" type="text" class="border border-1 p-1 rounded-md">
+          </div>
+          <div class="flex flex-col">
+            <label class="text-sm text-fuchsia-800 mt-5" for="doctor">Medications</label>
+            <template v-for="key in Object.keys(recipe.medications)">
+              <div>
+                <span class="font-bold text-fuchsia-800">{{key}}:</span> {{ recipe.medications[key].dose }}, {{ recipe.medications[key].frequency }}, {{recipe.medications[key].administration}}
+              </div>
+            </template>
+          </div>
+          <template v-if="button_open == false">
+            <button @click="openMedicationInputs()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Add medication</button>
           </template>
-        </div>
-        <template v-if="button_open == false">
-          <button @click="openMedicationInputs()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Add medication</button>
-        </template>
-        <template v-if="add_medication">
-          <div class="flex flex-col">
-            <label class="text-sm text-fuchsia-800 mt-4" for="doctor">Name</label>
-            <input v-model="medication.name" type="text" class="border border-1 p-1 rounded-md">
-          </div>
-          <div class="flex flex-col">
-            <label class="text-sm text-fuchsia-800" for="doctor">Dose</label>
-            <select v-model="medication.dose" id="doctor" class="border border-1 rounded-md p-1">
-              <option>5 mg</option>
-              <option>10 mg</option>
-              <option>25 mg</option>
-              <option>50 mg</option>
-              <option>100 mg</option>
-            </select>
-          </div>
-          <div class="flex flex-col">
-            <label class="text-sm text-fuchsia-800" for="doctor">Frequency</label>
-            <select v-model="medication.frequency" id="doctor" class="border border-1 rounded-md p-1">
-              <option>once a day</option>
-              <option>twice a day</option>
-              <option>three times a day</option>
-              <option>once a week</option>
-            </select>
-          </div>
-          <div class="flex flex-col">
-            <label class="text-sm text-fuchsia-800" for="doctor">Administration</label>
-            <select v-model="medication.administration" id="doctor" class="border border-1 rounded-md p-1">
-              <option>subcutaneous injection</option>
-              <option>oral</option>
-            </select>
-          </div>
-          <button @click="addMedication()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 mt-4 rounded-md text-white">Add</button>
-        </template>
+          <template v-if="add_medication">
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800 mt-4" for="doctor">Name</label>
+              <input v-model="medication.name" type="text" class="border border-1 p-1 rounded-md">
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800" for="doctor">Dose</label>
+              <select v-model="medication.dose" id="doctor" class="border border-1 rounded-md p-1">
+                <option>5 mg</option>
+                <option>10 mg</option>
+                <option>25 mg</option>
+                <option>50 mg</option>
+                <option>100 mg</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800" for="doctor">Frequency</label>
+              <select v-model="medication.frequency" id="doctor" class="border border-1 rounded-md p-1">
+                <option>once a day</option>
+                <option>twice a day</option>
+                <option>three times a day</option>
+                <option>once a week</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-fuchsia-800" for="doctor">Administration</label>
+              <select v-model="medication.administration" id="doctor" class="border border-1 rounded-md p-1">
+                <option>subcutaneous injection</option>
+                <option>oral</option>
+              </select>
+            </div>
+            <button @click="addMedication()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 mt-4 rounded-md text-white">Add</button>
+          </template>
 
-        <div class="flex flex-col">
-          <label class="text-sm text-fuchsia-800 mt-5" for="doctor">Notes</label>
-          <textarea v-model="recipe.notes" type="text" class="border border-1 p-1 rounded-md"/>
+          <div class="flex flex-col">
+            <label class="text-sm text-fuchsia-800 mt-5" for="doctor">Notes</label>
+            <textarea v-model="recipe.notes" type="text" class="border border-1 p-1 rounded-md"/>
+          </div>
+          <div class="mt-5 ml-20">
+            <button @click="updateRecipe()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Save</button>
+            <RouterLink :to="'/patient/' + patient_id + '/recipes'" class="items-center font-semibold bg-red-500 px-2 py-1 ml-5 rounded-md text-white">Cancel</RouterLink>
+          </div>
         </div>
-        <div class="mt-5 ml-20">
-          <button @click="updateRecipe()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Save</button>
-          <RouterLink :to="'/patient/' + patient_id + '/recipes'" class="items-center font-semibold bg-red-500 px-2 py-1 ml-5 rounded-md text-white">Cancel</RouterLink>
+          </div>
         </div>
       </div>
-    </div>
     </template>
   </div>
 </template>

@@ -34,7 +34,16 @@ const router = createRouter({
     {
       path:'/dashboard',
       name:'dashboard',
-      component: () => import('../views/dashboard/ViewPatients.vue'),
+      component: () => import('../views/dashboard/Dasboard.vue'),
+      meta: {
+        permissions: ['view_all_users'],
+        middleware: [requireAuth]
+      },
+    },
+    {
+      path:'/dashboard/:user_id/edit-user',
+      name:'edit-user',
+      component: () => import('../views/dashboard/EditUser.vue'),
       meta: {
         permissions: ['view_all_users'],
         middleware: [requireAuth]
@@ -108,7 +117,7 @@ const router = createRouter({
       name:'add_recipe',
       component: () => import('../views/recipes/AddRecipe.vue'),
       meta: {
-        permissions: ['add_prescriptions'],
+        permissions: ['create_prescriptions'],
         middleware: [requireAuth]
       },
     },

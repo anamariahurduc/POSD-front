@@ -11,9 +11,11 @@
       Is loading...
     </template>
     <template v-else>
-      <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Edit recipe</p>
-      <div class="w-full flex justify-center">
-        <div class="w-80 mt-10">
+      <p class="text-3xl font-semibold text-fuchsia-800 text-center mt-10">Add recipe</p>
+        <div class="w-full flex justify-center">
+          <div class="w-[460px] mt-10 p-8 border border-1 border-gray-100 shadow-lg rounded-md space-y-1">
+            <div class="w-full flex justify-center">
+            <div class="w-80 mt-10">
           <div class="flex flex-col">
             <label class="text-sm text-fuchsia-800" for="doctor">Name</label>
             <input v-model="recipe.name" type="text" class="border border-1 p-1 rounded-md">
@@ -76,6 +78,8 @@
             <RouterLink :to="'/patient/' + patient_id + '/recipes'" class="items-center font-semibold bg-red-500 px-2 py-1 ml-5 rounded-md text-white">Cancel</RouterLink>
           </div>
         </div>
+          </div>
+        </div>
       </div>
     </template>
   </div>
@@ -103,6 +107,7 @@ const recipe = ref({
 const user = ref({});
 const button_open = ref(false);
 const add_medication = ref(false);
+const isLoading = ref(true);
 
 function hexStringToUint8Array(hexString) {
   const bytes = new Uint8Array(hexString.length / 2);
@@ -246,5 +251,6 @@ const addRecipe = async () => {
 
 onMounted(async() => {
   await getUser();
+  isLoading.value = false;
 })
 </script>

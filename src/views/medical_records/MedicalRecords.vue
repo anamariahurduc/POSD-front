@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="auth_user.roles[0].name !== 'patient'" class="flex space-x-10 justify-center text-xl font-semibold p-3 bg-fuchsia-800 text-white">
+      <button class="flex justify-start" @click="goToPacientPage()">Go Back</button>
       <p>First name: {{user.first_name}}</p>
       <p>Last name: {{user.last_name}}</p>
       <p>Email: {{user.email}}</p>
@@ -118,6 +119,7 @@ import axios from "axios";
 import {onMounted, ref} from "vue";
 import Swal from "sweetalert2";
 import {useAuthUserStore} from "@/store/AuthUser";
+import router from "@/router";
 
 const route = useRoute();
 const patient_id = route.params.patient_id;
@@ -239,6 +241,10 @@ const getUser = async() => {
 
         user.value =  JSON.parse(decryptedText);
       })
+}
+
+const goToPacientPage = () => {
+  router.push({name: 'patient', params: {patient_id: patient_id}});
 }
 
 onMounted(async () => {
