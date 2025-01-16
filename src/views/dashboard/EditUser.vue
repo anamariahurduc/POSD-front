@@ -23,8 +23,8 @@
                 <option :value="role.name">{{role.name}}</option>
               </template>
             </select>
-            <div class="mt-5 ml-20">
-              <button @click="updateUser()" class="items-center font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Save</button>
+            <div class="mt-5 flex justify-center">
+              <button @click="updateUser()" class="font-semibold bg-fuchsia-800 px-2 py-1 rounded-md text-white">Save</button>
             </div>
           </div>
         </div>
@@ -165,7 +165,6 @@ const getRoles = async() => {
 }
 
 const updateUser = async () => {
-  console.log('ssss', selected_role_name.value)
   let role_index  = all_roles.value.findIndex(item => item.name == selected_role_name.value);
   if(role_index >= 0)
   {
