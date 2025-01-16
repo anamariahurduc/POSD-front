@@ -80,7 +80,7 @@
               <td>
                 <div class="px-6">
                   <div class="text-base font-semibold" v-for="id in JSON.parse(medical_record.lab_result_ids)" v-if="JSON.parse(medical_record.lab_result_ids).length > 0">
-                    <RouterLink :to="'/patient/' + patient_id + '/lab-results/' + id" class="text-blue-500 cursor-pointer font-semibold underline">{{ id }}</RouterLink>
+                    <RouterLink :to="'/patient/' + patient_id + '/laboratory-results/' + id" class="text-blue-500 cursor-pointer font-semibold underline">{{ id }}</RouterLink>
                   </div>
                   <p v-else>-</p>
                 </div>
