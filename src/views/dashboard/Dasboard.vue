@@ -78,7 +78,9 @@
 <!--                        </div>-->
 <!--                    </td>-->
                     <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+<!--                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>-->
+                      <RouterLink :to="'/dashboard/' + user.id + '/edit-user'" class="font-semibold bg-orange-500 px-2 py-1 rounded-md text-white">Edit user</RouterLink>
+
                     </td>
                 </tr>
                 </template>
@@ -95,6 +97,7 @@ import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
 import {onMounted, ref} from "vue";
 import {useCookies} from "vue3-cookies";
+import {useRoute} from "vue-router";
 
 const users = ref([]);
 const key = ref('14e3927e8e3253b9b8a46581ef959f09fa3c8fb06f85f49dbf2e0ee05a03b9cd');
